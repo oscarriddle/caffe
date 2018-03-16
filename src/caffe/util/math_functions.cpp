@@ -16,6 +16,8 @@ void caffe_cpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
     float* C) {
   int lda = (TransA == CblasNoTrans) ? K : M;
   int ldb = (TransB == CblasNoTrans) ? N : K;
+  //printf("int M:%0d, int N:%0d, int K:%0d, fload alpha:%0f, floaf A:%0f, float B:%0f, float beta:%0f, float C:%0f \n",
+//		  M, N, K, alpha, &A, &B, beta, &C);
   cblas_sgemm(CblasRowMajor, TransA, TransB, M, N, K, alpha, A, lda, B,
       ldb, beta, C, N);
 }
@@ -27,6 +29,8 @@ void caffe_cpu_gemm<double>(const CBLAS_TRANSPOSE TransA,
     double* C) {
   int lda = (TransA == CblasNoTrans) ? K : M;
   int ldb = (TransB == CblasNoTrans) ? N : K;
+  //printf("int M:%0d, int N:%0d, int K:%0d, fload alpha:%0f, floaf A:%0f, float B:%0f, float beta:%0f, float C:%0f \n",
+//		  M, N, K, alpha, &A, &B, beta, &C);
   cblas_dgemm(CblasRowMajor, TransA, TransB, M, N, K, alpha, A, lda, B,
       ldb, beta, C, N);
 }

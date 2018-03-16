@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <vector>
-
+#include <iostream>
 #include "caffe/layers/relu_layer.hpp"
 
 namespace caffe {
@@ -15,6 +15,7 @@ void ReLULayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   for (int i = 0; i < count; ++i) {
     top_data[i] = std::max(bottom_data[i], Dtype(0))
         + negative_slope * std::min(bottom_data[i], Dtype(0));
+    //printf("bot[%0d]=%0g, top[%0d]=%0f\n",i,bottom_data[i],i,top_data[i]);
   }
 }
 

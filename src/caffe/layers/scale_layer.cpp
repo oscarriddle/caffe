@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <vector>
-
+#include <iostream>
 #include "caffe/filler.hpp"
 #include "caffe/layer_factory.hpp"
 #include "caffe/layers/scale_layer.hpp"
@@ -130,13 +130,17 @@ void ScaleLayer<Dtype>::Forward_cpu(
   Dtype* top_data = top[0]->mutable_cpu_data();
   for (int n = 0; n < outer_dim_; ++n) {
     for (int d = 0; d < scale_dim_; ++d) {
-      const Dtype factor = scale_data[d];
+      //const Dtype factor = scale_data[d];
+    	  Dtype factor = scale_data[d];
+      factor=Dtype(1);
+      //std::cout<<"Outer_dim:"<<n<<" "<<"Scale_dim:"<<d<<" "<<"Factor:"<<factor<<std::endl;
       caffe_cpu_scale(inner_dim_, factor, bottom_data, top_data);
       bottom_data += inner_dim_;
       top_data += inner_dim_;
     }
   }
   if (bias_layer_) {
+	//std::cout<<"Bias_bottom_vec_:"<<bias_bottom_vec_[0]<<std::endl;
     bias_layer_->Forward(bias_bottom_vec_, top);
   }
 }

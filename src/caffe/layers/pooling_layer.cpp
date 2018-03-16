@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <vector>
-
+#include <iostream>
 #include "caffe/layers/pooling_layer.hpp"
 #include "caffe/util/math_functions.hpp"
 
@@ -197,7 +197,7 @@ void PoolingLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
             int hstart = ph * stride_h_ - pad_h_;
             int wstart = pw * stride_w_ - pad_w_;
             int hend = min(hstart + kernel_h_, height_ + pad_h_);
-            int wend = min(wstart + kernel_w_, width_ + pad_w_);
+            int wend = min(wstart + kernel_w_, width_ + pad_h_);
             int pool_size = (hend - hstart) * (wend - wstart);
             hstart = max(hstart, 0);
             wstart = max(wstart, 0);
@@ -209,7 +209,16 @@ void PoolingLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                     bottom_data[h * width_ + w];
               }
             }
-            top_data[ph * pooled_width_ + pw] /= pool_size;
+            std::cout<<"pooled_height_:"<<pooled_height_<<", "<<"pooled_width_:"<<pooled_width_<<std::endl;
+            std::cout<<"stride_h_:"<<stride_h_<<", "<<"stride_w_:"<<stride_w_<<std::endl;
+            std::cout<<"pad_h_:"<<pad_h_<<", "<<"pad_h_:"<<pad_h_<<std::endl;
+            std::cout<<"height_:"<<height_<<", "<<"width_:"<<width_<<std::endl;
+            std::cout<<"hstart:"<<hstart<<", "<<"hend:"<<hend<<std::endl;
+            std::cout<<"wstart"<<wstart<<", "<<"wend:"<<wend<<std::endl;
+            std::cout<<"pool_size"<<pool_size<<std::endl;
+            //top_data[ph * pooled_width_ + pw] /= pool_size;
+            top_data[ph * pooled_width_ + pw] /= (hend-hstart)*(wend-wstart);
+            std::cout<<"top_data"<<top_data[ph * pooled_width_ + pw]<<std::endl;
           }
         }
         // compute offset
