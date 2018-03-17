@@ -1277,6 +1277,7 @@ message V1LayerParameter {
     TANH = 23;
     WINDOW_DATA = 24;
     THRESHOLD = 31;
+    REDUCE_MEAN = 99;
   }
   optional LayerType type = 5;
   repeated BlobProto blobs = 6;
