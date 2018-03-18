@@ -12,6 +12,10 @@ namespace caffe{
     const int count = bottom[0]->count();
     for (int i = 0; i < count; ++i) {
       top_data[i] = bottom_data[i] * Dtype(2);
+      std::cout<<"i: "<<i<<", "<<"top_data["<<i<<"]:"<<top_data[i]<<", "<<std::endl;
+      if (top_data[i]==Dtype(-1.359375)) {
+    	  	  std::cout<<"HERE"<<std::endl;
+      }
     }
   }
   template <typename Dtype>
