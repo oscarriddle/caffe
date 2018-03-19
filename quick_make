@@ -1,0 +1,4 @@
+cd build
+sudo make all
+sudo make pycaffe
+sudo make install
