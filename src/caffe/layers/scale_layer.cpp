@@ -117,6 +117,7 @@ template <typename Dtype>
 void ScaleLayer<Dtype>::Forward_cpu(
     const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   const Dtype* bottom_data = bottom[0]->cpu_data();
+  ScaleParameter scale_param_ = this->layer_param_.scale_param();
   if (bottom[0] == top[0]) {
     // In-place computation; need to store bottom data before overwriting it.
     // Note that this is only necessary for Backward; we could skip this if not
@@ -130,7 +131,10 @@ void ScaleLayer<Dtype>::Forward_cpu(
   Dtype* top_data = top[0]->mutable_cpu_data();
   for (int n = 0; n < outer_dim_; ++n) {
     for (int d = 0; d < scale_dim_; ++d) {
-      const Dtype factor = scale_data[d];
+      Dtype factor = scale_data[d];
+      if (scale_param_.fix_gamma() == true) {
+        factor = Dtype(1);
+      }
       caffe_cpu_scale(inner_dim_, factor, bottom_data, top_data);
       bottom_data += inner_dim_;
       top_data += inner_dim_;
@@ -144,6 +148,7 @@ void ScaleLayer<Dtype>::Forward_cpu(
 template <typename Dtype>
 void ScaleLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+  ScaleParameter scale_param_ = this->layer_param_.scale_param();
   if (bias_layer_ &&
       this->param_propagate_down_[this->param_propagate_down_.size() - 1]) {
     bias_layer_->Backward(top, bias_propagate_down_, bias_bottom_vec_);
@@ -208,7 +213,10 @@ void ScaleLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
     Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
     for (int n = 0; n < outer_dim_; ++n) {
       for (int d = 0; d < scale_dim_; ++d) {
-        const Dtype factor = scale_data[d];
+        Dtype factor = scale_data[d];
+        if (scale_param_.fix_gamma() == true) {
+          factor = Dtype(1);
+	}
         caffe_cpu_scale(inner_dim_, factor, top_diff, bottom_diff);
         bottom_diff += inner_dim_;
         top_diff += inner_dim_;
