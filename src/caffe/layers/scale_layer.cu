@@ -16,9 +16,10 @@ __global__ void ScaleForward(const int n, const Dtype* in,
       out[index] = in[index] * Dtype(1); 
     } else {
       out[index] = in[index] * scale[scale_index];
+    }
   }
 }
-
+  
 template <typename Dtype>
 __global__ void ScaleBiasForward(const int n, const Dtype* in,
     const Dtype* scale, const Dtype* bias,
